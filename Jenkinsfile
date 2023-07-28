@@ -75,10 +75,9 @@ pipeline {
         stage('Docker Image Build'){
 
             steps{
-                
-                sh 'docker image build -t $(echo $JOB_NAME | tr '[:upper:]' '[:lower:]'):v1.$BUILD_ID .'
-                sh 'docker image tag $(echo $JOB_NAME | tr '[:upper:]' '[:lower:]'):v1.$BUILD_ID rtekoh/$(echo $JOB_NAME | tr '[:upper:]' '[:lower:]'):v1.$BUILD_ID'
-                sh 'docker image tag $(echo $JOB_NAME | tr '[:upper:]' '[:lower:]'):v1.$BUILD_ID rtekoh/$(echo $JOB_NAME | tr '[:upper:]' '[:lower:]'):latest'
+                sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:v1.$BUILD_ID'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:latest'
             }
         }
     }
