@@ -75,9 +75,9 @@ pipeline {
         stage('Docker Image Build'){
 
             steps{
-                sh 'docker iamge build -t $JOB_NAME:v1.$BUILD_ID .'
-                sh 'docker iamge tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:v1.$BUILD_ID'
-                sh 'docker iamge tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:latest'
+                sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:v1.$BUILD_ID'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:latest'
             }
         }
     }
