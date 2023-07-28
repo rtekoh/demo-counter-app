@@ -51,7 +51,7 @@ pipeline {
         stage ('Upload Var file to Nexus'){
 
             steps{
-                scripts{
+                script{
                     nexusArtifactUploader artifacts: 
                     [
                         [
