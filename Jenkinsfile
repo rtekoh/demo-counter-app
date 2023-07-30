@@ -45,5 +45,29 @@ pipeline {
                 waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-apikey'
             }
         }
+        stage ('Upload Var file to Nexus'){
+
+            steps{
+                script{
+                    def readPomVersion = readMavenPom file: 'pom.xml'
+                    def nexusRepo = readPomVersion.version.endsWith("SNAPSHOT") ? "demoapp-snapshots" : "counter-application"
+                    nexusArtifactUploader artifacts: 
+                    [
+                        [
+                            artifactId: 'springboot', 
+                            classifier: '', file: 'target/Uber.jar', 
+                            type: 'jar'
+                            ]
+                    ], 
+                    credentialsId: 'nexus-auth', 
+                    groupId: 'com.example', 
+                    nexusUrl: '44.214.211.83:8081', 
+                    nexusVersion: 'nexus3', 
+                    protocol: 'http', 
+                    repository: nexusRepo, 
+                    version: "${readPomVersion.version}"
+                }
+            }
+        }
     }
 }
