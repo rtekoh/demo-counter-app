@@ -69,5 +69,28 @@ pipeline {
                 }
             }
         }
+        stage('Docker Image Build'){
+
+            steps{
+                sh 'docker image build -t $JOB_NAME:v1.$BUILD_ID .'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:v1.$BUILD_ID'
+                sh 'docker image tag $JOB_NAME:v1.$BUILD_ID rtekoh/$JOB_NAME:latest'
+            }
+        }
+
+        stage('Push images to DockerHub'){
+
+            steps{
+                
+                script{
+                    withCredentials([string(credentialsId: 'dockerhub_passd', variable: 'dockerhub_passd')]) {
+                       sh 'docker login -u rtekoh -p ${dockerhub_passd}'
+                       sh 'docker image push rtekoh/$JOB_NAME:v1.$BUILD_ID'
+                       sh 'docker image push rtekoh/$JOB_NAME:latest'
+                       sh 'docker image rm rtekoh/$JOB_NAME:latest rtekoh/$JOB_NAME:v1.$BUILD_ID $JOB_NAME:v1.$BUILD_ID'
+                 }
+                }
+            }
+        }
     }
 }
