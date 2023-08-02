@@ -1,0 +1,36 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+   name: bobdevops
+spec:
+   replicas: 2
+   selector:      # tells the controller which pods to watch/belong to
+    matchLabels:
+     app: bobdevops
+   template:
+      metadata:
+        labels:
+          app: bobdevops
+      spec:
+       containers:
+        - name: bobdevops
+          image: rtekoh/piepline-demo
+          imagePullPolicy: Always
+          ports:
+          - containerPort: 80
+
+--- 
+kind: Service                             
+apiVersion: v1
+metadata:
+  name: bobdevops
+  labels:
+    app: bobdevops
+spec:
+  ports:
+    - port: 8080                               
+      targetPort: 80                    
+      nodePort: 31200
+  selector:
+    app: bobdevops                    
+  type: LoadBalancer  
