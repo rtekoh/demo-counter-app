@@ -29,26 +29,26 @@ pipeline {
             }
         }
 
-        // stage('EKS Deployment') {
-        //     when { expression { params.action == 'create' } }
-        //     steps {
-        //         script {
-        //             def apply = false
-        //             try {
-        //                 input message: 'Please confirm the apply to initiate the deployments', ok: 'Ready to apply the config'
-        //                 apply = true
-        //             } catch (err) {
-        //                 apply = false
-        //                 currentBuild.result = 'UNSTABLE'
-        //             }
-        //             if (apply) {
-        //                 sh """
-        //                 kubectl apply -f .
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
+        stage('EKS Deployment') {
+            when { expression { params.action == 'create' } }
+            steps {
+                script {
+                    def apply = false
+                    try {
+                        input message: 'Please confirm the apply to initiate the deployments', ok: 'Ready to apply the config'
+                        apply = true
+                    } catch (err) {
+                        apply = false
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                    if (apply) {
+                        sh """
+                        kubectl apply -f .
+                        """
+                    }
+                }
+            }
+        }
 
         // stage('EKS Destroy cluster') {
         //     when { expression { params.action == 'destroy' } }
