@@ -42,10 +42,14 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                     }
                     if (apply) {
-                        withAWS(credentials: 'jenkins-aws-cred', region: 'us-east-1') {
-                        sh """
-                        kubectl apply -f .
-                        """
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "aws-jenkins",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY' ]]) {
+                            sh """
+                            kubectl apply -f .
+                            """
                         }
                     }
                 }
