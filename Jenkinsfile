@@ -21,37 +21,64 @@ pipeline{
             
             steps{
                 sh """
+                    aws configure set aws_access_key_id "${ACCESS_KEY}"
+                    aws configure set aws_secret_access_key "${SECRET_ACCESS_KEY}"
+                    aws configure set region ""
                     aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                     """;
             }
 
         }
 
-        stage('EKS Deployment'){
+        // stage('EKS Deployment'){
 
-            when { expression { params.action == 'create'}}
-            steps{
+        //     when { expression { params.action == 'create'}}
+        //     steps{
 
-                script{
-                    def apply = false
-                    try{
-                        input message: 'Please confirm the apply to initiate the deployments', ok: 'Ready to apply the config'
-                        apply = true
-                    }
-                    catch(err){
-                        apply = false
-                        CurrentBuild.result = 'UNSTABLE'
-                    }
-                    if(apply){
-                        sh """
-                        kubectl apply -f .
-                                """
-                    }
-                }
+        //         script{
+        //             def apply = false
+        //             try{
+        //                 input message: 'Please confirm the apply to initiate the deployments', ok: 'Ready to apply the config'
+        //                 apply = true
+        //             }
+        //             catch(err){
+        //                 apply = false
+        //                 CurrentBuild.result = 'UNSTABLE'
+        //             }
+        //             if(apply){
+        //                 sh """
+        //                 kubectl apply -f .
+        //                         """
+        //             }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
 
+        // stage('EKS Destroy cluster'){
+
+        //     when { expression { params.action == 'destroy'}}
+        //     steps{
+
+        //         script{
+        //             def destroy = false
+        //             try{
+        //                 input message: 'Please confirm the destroy to delete the deployments', ok: 'Ready to destroy the config'
+        //                 destroy = true
+        //             }
+        //             catch(err){
+        //                 destroy = false
+        //                 CurrentBuild.result = 'UNSTABLE'
+        //             }
+        //             if(destroy){
+        //                 sh """
+        //                 kubectl delete -f .
+        //                         """;
+        //             }
+        //         }
+                
+        //     }
+        // }
 
     }
 
