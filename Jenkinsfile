@@ -21,9 +21,15 @@ pipeline {
 
         stage('EKS cluster Connect') {
             steps {
-                withAWS(credentials: 'jenkins-aws-cred', region: 'us-east-1') {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: "aws-jenkins",
+                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY' ]]) {
+
                     sh """
-                    aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
+                    aws s3 ls
+                    // aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                     """
                 }
             }
