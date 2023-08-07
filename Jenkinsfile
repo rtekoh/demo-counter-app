@@ -2,6 +2,11 @@ pipeline{
 
     agent any
 
+    environment {
+        ACCESS_KEY     = credentials('aws_access_key_id')
+        SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+
+    }
     parameters{
         choice(name: 'action', choices: 'create\ndestroy\ndestroyekscluster', description: 'Create/Update or Destroy the EKS cluster')
         string(name: 'cluster', defaultValue: 'counter-app', description: 'EKS cluster name')
