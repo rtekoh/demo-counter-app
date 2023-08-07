@@ -29,8 +29,9 @@ pipeline{
                 sh """
                     aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                     """;
-            }
+                }
 
+            }
         }
 
         // stage('EKS Deployment'){
