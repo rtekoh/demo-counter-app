@@ -56,25 +56,25 @@ pipeline {
             }
         }
 
-        // stage('EKS Destroy cluster') {
-        //     when { expression { params.action == 'destroy' } }
-        //     steps {
-        //         script {
-        //             def destroy = false
-        //             try {
-        //                 input message: 'Please confirm the destroy to delete the deployments', ok: 'Ready to destroy the config'
-        //                 destroy = true
-        //             } catch (err) {
-        //                 destroy = false
-        //                 currentBuild.result = 'UNSTABLE'
-        //             }
-        //             if (destroy) {
-        //                 sh """
-        //                 kubectl delete -f .
-        //                 """
-        //             }
-        //         }
-        //     }
-        // }
+        stage('EKS Destroy cluster') {
+            when { expression { params.action == 'destroy' } }
+            steps {
+                script {
+                    def destroy = false
+                    try {
+                        input message: 'Please confirm the destroy to delete the deployments', ok: 'Ready to destroy the config'
+                        destroy = true
+                    } catch (err) {
+                        destroy = false
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                    if (destroy) {
+                        sh """
+                        kubectl delete -f .
+                        """
+                    }
+                }
+            }
+        }
     }
 }
