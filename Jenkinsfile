@@ -3,8 +3,8 @@ pipeline{
     agent any
 
     environment {
-        ACCESS_KEY     = credentials('aws_access_key_id')
-        SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
+        ACCESS_KEY = credentials('aws_access_key_id')
+        SECRET_KEY = credentials('aws_secret_access_key')
 
     }
     parameters{
@@ -27,7 +27,7 @@ pipeline{
             steps{
                 sh """
                     aws configure set aws_access_key_id "$ACCESS_KEY"
-                    aws configure set aws_secret_access_key "$SECRET_ACCESS_KEY"
+                    aws configure set aws_secret_access_key "$SECRET_KEY"
                     aws configure set region ""
                     aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                     """;
