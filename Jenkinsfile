@@ -43,6 +43,7 @@ pipeline {
                     }
                     if (apply) {
                         sh """
+                        kubectl cache invalidate
                         kubectl apply -f .
                         """
                     }
