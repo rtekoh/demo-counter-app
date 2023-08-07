@@ -42,9 +42,11 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                     }
                     if (apply) {
+                        withAWS(credentials: 'jenkins-aws-cred', region: 'us-east-1') {
                         sh """
                         kubectl apply -f .
                         """
+                        }
                     }
                 }
             }
