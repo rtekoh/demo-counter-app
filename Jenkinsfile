@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     parameters {
         choice(name: 'action', choices: 'create\ndestroy\ndestroyekscluster', description: 'Create/Update or Destroy the EKS cluster')
         string(name: 'cluster', defaultValue: 'counter-app', description: 'EKS cluster name')
@@ -23,7 +23,6 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY' ]]) {
 
                     sh """
-                    aws s3 ls
                     aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
                     """
                 }
