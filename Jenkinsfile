@@ -69,9 +69,15 @@ pipeline {
                         currentBuild.result = 'UNSTABLE'
                     }
                     if (destroy) {
-                        sh """
-                        kubectl delete -f .
-                        """
+                        withCredentials([[
+                            $class: 'AmazonWebServicesCredentialsBinding',
+                            credentialsId: "aws-jenkins",
+                            accessKeyVariable: 'AWS_ACCESS_KEY_ID',
+                            secretKeyVariable: 'AWS_SECRET_ACCESS_KEY' ]]) {
+                             sh """
+                            kubectl delete -f .
+                            """
+                            }
                     }
                 }
             }
