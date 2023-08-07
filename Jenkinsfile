@@ -1,90 +1,74 @@
-pipeline{
-
+pipeline {
     agent any
 
     environment {
         AWS_ACCESS_KEY = credentials('aws_access_key_id')
         AWS_SECRET_ACCESS_KEY = credentials('aws_secret_access_key')
-
     }
-    parameters{
+
+    parameters {
         choice(name: 'action', choices: 'create\ndestroy\ndestroyekscluster', description: 'Create/Update or Destroy the EKS cluster')
         string(name: 'cluster', defaultValue: 'counter-app', description: 'EKS cluster name')
         string(name: 'region', defaultValue: 'us-east-1', description: 'EKS cluster region')
     }
 
-    stages{
-
-        stage('Git Checkout'){
-            
-            steps{
+    stages {
+        stage('Git Checkout') {
+            steps {
                 git branch: 'main', url: 'https://github.com/rtekoh/demo-counter-app.git'
             }
-
         }
-        stage('EKS cluster Connect'){
-            
-            steps{
-                withAWS(credentials: 'jenkins-aws-cred', region: 'us-east-1') {
-                sh """
-                    aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
-                    """;
-                }
 
+        stage('EKS cluster Connect') {
+            steps {
+                withAWS(credentials: 'jenkins-aws-cred', region: 'us-east-1') {
+                    sh """
+                    aws eks --region ${params.region} update-kubeconfig --name ${params.cluster}
+                    """
+                }
             }
         }
 
-        // stage('EKS Deployment'){
-
-        //     when { expression { params.action == 'create'}}
-        //     steps{
-
-        //         script{
+        // stage('EKS Deployment') {
+        //     when { expression { params.action == 'create' } }
+        //     steps {
+        //         script {
         //             def apply = false
-        //             try{
+        //             try {
         //                 input message: 'Please confirm the apply to initiate the deployments', ok: 'Ready to apply the config'
         //                 apply = true
-        //             }
-        //             catch(err){
+        //             } catch (err) {
         //                 apply = false
-        //                 CurrentBuild.result = 'UNSTABLE'
+        //                 currentBuild.result = 'UNSTABLE'
         //             }
-        //             if(apply){
+        //             if (apply) {
         //                 sh """
         //                 kubectl apply -f .
-        //                         """
+        //                 """
         //             }
         //         }
-                
         //     }
         // }
 
-        // stage('EKS Destroy cluster'){
-
-        //     when { expression { params.action == 'destroy'}}
-        //     steps{
-
-        //         script{
+        // stage('EKS Destroy cluster') {
+        //     when { expression { params.action == 'destroy' } }
+        //     steps {
+        //         script {
         //             def destroy = false
-        //             try{
+        //             try {
         //                 input message: 'Please confirm the destroy to delete the deployments', ok: 'Ready to destroy the config'
         //                 destroy = true
-        //             }
-        //             catch(err){
+        //             } catch (err) {
         //                 destroy = false
-        //                 CurrentBuild.result = 'UNSTABLE'
+        //                 currentBuild.result = 'UNSTABLE'
         //             }
-        //             if(destroy){
+        //             if (destroy) {
         //                 sh """
         //                 kubectl delete -f .
-        //                         """;
+        //                 """
         //             }
         //         }
-                
         //     }
         // }
-
     }
-
-    
 }
